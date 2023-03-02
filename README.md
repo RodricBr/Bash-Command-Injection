@@ -6,7 +6,7 @@ Bash Command Injection using binary / Injeção de Comando no Bash utilizando bi
 - [ASCII -> Octal](https://onlineasciitools.com/convert-ascii-to-octal)
 - [Decimal -> Binary](https://www.rapidtables.com/convert/number/decimal-to-binary.html)
 
-> O que eu fiz, utilizando a vírgula `,` do **Brace Expansion** como um espaço. <br>
+> Utilizando a **vírgula** `,` do **Brace Expansion** como um **espaço**. <br>
 > O comando é `uname -a`. (Ignore o `$` antes do `${!##\-}`, é só pelo Syntax Highlight)
 ```console
 $ ${!##\-}<<<{\$\'\\$(($((1<<1))#10100101))\\$(($((1<<1))#10011100))\\$(($((1<<1))#10001101))\\$(($((1<<1))#10011011))\\$(($((1<<1))#10010001))\',\$\'\\$(($((1<<1))#110111))\\$(($((1<<1))#10001101))\'}
