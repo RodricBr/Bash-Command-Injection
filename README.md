@@ -9,6 +9,12 @@ Bash Command Injection using binary / Injeção de Comando no Bash utilizando bi
 $ ${!##\-}<<<{\$\'\\$(($((1<<1))#10100101))\\$(($((1<<1))#10011100))\\$(($((1<<1))#10001101))\\$(($((1<<1))#10011011))\\$(($((1<<1))#10010001))\',\$\'\\$(($((1<<1))#110111))\\$(($((1<<1))#10001101))\'}
 ```
 
+> Explicação do por que de usar o **Brace Expansion**.
+```console
+$ {primeiro,segundo}
+primeiro segundo
+```
+
 <br>
 
 <br>
