@@ -3,6 +3,9 @@ Bash Command Injection using binary / Injeção de Comando no Bash utilizando bi
 
 <img src="bash command injection waf bypass.png" align="center">
 
+- [ASCII -> Octal](https://onlineasciitools.com/convert-ascii-to-octal)
+- [Decimal -> Binary](https://www.rapidtables.com/convert/number/decimal-to-binary.html)
+
 > O que eu fiz, utilizando a vírgula `,` do **Brace Expansion** como um espaço. <br>
 > O comando é `uname -a`. (Ignore o `$` antes do `${!##\-}`, é só pelo Syntax Highlight)
 ```console
