@@ -11,7 +11,7 @@ $ ${!##\-}<<<{\$\'\\$(($((1<<1))#10100101))\\$(($((1<<1))#10011100))\\$(($((1<<1
 
 > Explicação do por que de usar o **Brace Expansion**.
 ```console
-$ {primeiro,segundo}
+$ echo {primeiro,segundo}
 primeiro segundo
 ```
 
