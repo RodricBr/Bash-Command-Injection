@@ -8,7 +8,7 @@ Bash Command Injection using binary / Injeção de Comando no Bash utilizando bi
 ```console
 $ ${!##\-}<<<{\$\'\\$(($((1<<1))#10100101))\\$(($((1<<1))#10011100))\\$(($((1<<1))#10001101))\\$(($((1<<1))#10011011))\\$(($((1<<1))#10010001))\',\$\'\\$(($((1<<1))#110111))\\$(($((1<<1))#10001101))\'}
 ```
-> Em suma, é isso que está acontecendo: (Explicação completa logo abaixo)
+> Em suma, é isso que está acontecendo: ([Explicação completa logo abaixo](#explicação-em-inglês))
 - `{\$\'comando-1\',\$\'comando-2\'}`
 
 <br>
