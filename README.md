@@ -89,4 +89,11 @@ $'\151\144' # 151 == i; 144 == d (id gets interpreted as a command)
 
 # Image explanation, by @sirifu4k1
 # https://pbs.twimg.com/media/FqJd-irakAEBPh_.jpg
+
+
+# Bonus without using numbers:
+# ${0##\-}<<<$\'\\$(($((${##}<<${##}))#${##}${#}${#}${##}${##}${#}${##}${#}))\\$(($((${##}<<${##}))#${##}${#}${##}${#}${#}${#}${##}${##}))\'
+
+${##} == 1
+${#}  == 0
 ```
