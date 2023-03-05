@@ -70,6 +70,9 @@ $'\151\144' # 151 == i; 144 == d (id gets interpreted as a command)
 
 ### 2.4: $(( $((1<<1))#10011010 ))
 # 1<<1 == 2
+# base#number == performing calculations between different arithmetic bases [base#]number
+#                base is a decimal integer between 2 and 36 that specifies the arithmetic base. (default is base 10)
+
 # Enclosing two arithmetic expansion inside of each other, so that 2#10011010 (octal "154" to binary is "10011010") is equal to 154 (octal)
 # Text to octal: "http://www.unit-conversion.info/texttools/octal/"
 # Decimal to binary: "https://www.rapidtables.com/convert/number/decimal-to-binary.html"
