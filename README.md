@@ -1,5 +1,5 @@
 # Bash-Command-Injection
-Bash Command Injection using binary / Injeção de Comando no Bash utilizando binários
+Bash Command Injection WAF Bypass
 
 <img src="bash command injection waf bypass.png" align="center">
 
