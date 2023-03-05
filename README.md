@@ -6,21 +6,24 @@ Bash Command Injection using binary / Injeção de Comando no Bash utilizando bi
 - [ASCII -> Octal](https://onlineasciitools.com/convert-ascii-to-octal)
 - [Decimal -> Binary](https://www.rapidtables.com/convert/number/decimal-to-binary.html)
 
-> Utilizando a **vírgula** `,` do **Brace Expansion** como um **espaço**. <br>
-> O comando é `uname -a`. (Ignore o `$` antes do `${!##\-}`, é só pelo Syntax Highlight)
-```console
-$ ${!##\-}<<<{\$\'\\$(($((1<<1))#10100101))\\$(($((1<<1))#10011100))\\$(($((1<<1))#10001101))\\$(($((1<<1))#10011011))\\$(($((1<<1))#10010001))\',\$\'\\$(($((1<<1))#110111))\\$(($((1<<1))#10001101))\'}
-```
-> Em suma, é isso que está acontecendo: ([Explicação completa logo abaixo](#explicação-em-inglês))
-- `{\$\'comando-1\',\$\'comando-2\'}`
+> Using a **comma** `,` from **Brace Expansion** so they act like a **space**. <br>
 
 <br>
 
-> Explicação do por que de usar o **Brace Expansion**.
+> The reason why we use **Brace Expansion**:
 ```console
-$ echo {primeiro,segundo}
-primeiro segundo
+$ echo {ola,mundo}
+ola mundo
 ```
+
+<br>
+
+> `uname -a`: <br>
+```bash
+${!##\-}<<<{\$\'\\$(($((1<<1))#10100101))\\$(($((1<<1))#10011100))\\$(($((1<<1))#10001101))\\$(($((1<<1))#10011011))\\$(($((1<<1))#10010001))\',\$\'\\$(($((1<<1))#110111))\\$(($((1<<1))#10001101))\'}
+```
+> In short, this is what's happening: ([Click to see full explanation](#explicação-em-inglês))
+- `{\$\'command-1\',\$\'command-2\'}`
 
 <br>
 
@@ -28,7 +31,7 @@ primeiro segundo
 
 <br>
 
-### Explicação em inglês:
+### Full Explanation:
 
 ```bash
 ### idea: @sirifu4k1
