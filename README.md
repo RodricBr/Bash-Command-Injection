@@ -54,7 +54,7 @@ $ wc -l <<< about.txt
 
 ## 1.3: $\' ... \'
 # First of all, "$'Something\nSomething-else'" causes escape sequences to be interpreted.
-# So we can call an octal to be interpreted to text, just like so (154 in octal == l; 163 in octal == s):
+# So we can call a UTF-8 octal to be interpreted to text, just like so (154 in octal == l; 163 in octal == s):
 $'\154\163'
 
 # Another example:
