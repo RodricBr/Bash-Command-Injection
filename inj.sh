@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+[[ -z "$*" ]]&& echo -e "\nUso:\n ${0##/} c o m a n d o" # for now you'll have to separate the characters with a space
+
 echo -e "\n - Injeção de Comando para bypassar WAF / Command Injection for WAF Bypassing\n   Github: RodricBr"
 
 for ARG_ in "$@"; do
