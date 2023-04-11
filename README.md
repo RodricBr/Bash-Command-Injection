@@ -1,7 +1,7 @@
 # Bash-Command-Injection
 Bash Command Injection WAF Bypass
 
-<img src="bash command injection waf bypass.png" align="center">
+<img src="bash command injection waf bypass.pngxx" align="center">
 
 - [ASCII -> Octal](https://onlineasciitools.com/convert-ascii-to-octal)
 - [Decimal -> Binary](https://www.rapidtables.com/convert/number/decimal-to-binary.html)
