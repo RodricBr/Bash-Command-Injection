@@ -22,7 +22,7 @@ $ echo {ola,mundo}
 ola mundo
 ```
 
-> In short, this is what's happening: ([Click to see full explanation](#explicação-em-inglês))
+> In short, this is what's happening: ([Click to see full explanation](#full-explanation))
 - `{\$\'command1\',\$\'command2-or-argument2\'}`
 
 <br>
