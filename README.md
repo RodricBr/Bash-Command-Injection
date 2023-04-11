@@ -3,7 +3,6 @@ Bash Command Injection WAF Bypass
 
 <img src="cmd-injection.png" align="center">
 
-- [ASCII -> Octal](https://onlineasciitools.com/convert-ascii-to-octal)
 - [Decimal -> Binary](https://www.rapidtables.com/convert/number/decimal-to-binary.html)
 
 > Using a **comma** `,` from **Brace Expansion** so it acts like a **space**. <br>
