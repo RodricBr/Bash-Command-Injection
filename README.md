@@ -54,7 +54,7 @@ $ wc -l <<< about.txt
 
 ## 1.3: $\' ... \'
 # First of all, "$'Something\nSomething-else'" causes escape sequences to be interpreted.
-# So we can call a UTF-8 octal to be interpreted to text, just like so (154 in octal == l; 163 in octal == s):
+# So we can call a UTF-8 decimal to be interpreted to text, just like so (154 in decimal == l; 163 in decimal == s):
 $'\154\163'
 
 # Another example:
@@ -76,16 +76,18 @@ $'\151\144' # 151 == i; 144 == d (id gets interpreted as a command)
 # base#number == performing calculations between different arithmetic bases [base#]number
 #                base is a decimal integer between 2 and 36 that specifies the arithmetic base. (default is base 10)
 
-# Enclosing two arithmetic expansion inside of each other, so that 2#10011010 (octal "154" to binary is "10011010") is equal to 154 (octal)
+# Enclosing two arithmetic expansion inside of each other, so that 2#10011010 (decimal "154" to binary is "10011010") is equal to 154
+# This is a method I found that works but is a little confusing:
 # Text to octal: "http://www.unit-conversion.info/texttools/octal/"
 # Decimal to binary: "https://www.rapidtables.com/convert/number/decimal-to-binary.html"
 # 167 150 157 :: 10100111 = w; 10010110 = h; 10011101 = o
 
 ### 3.4: $(( $((1<<1))#10100011 ))
-# Is exatcly the same concept as I mentioned previously (at 2.4), and we're left with 163 (octal)
+# Is exatcly the same concept as I mentioned previously (at 2.4), and we're left with 163 (decimal)
 
 # Conclusion:
 # This whole mess will give us the result $'\154\163', which is "ls"
+# or echo -e "\0154\163" to print it as a string
 
 # Image explanation, by @sirifu4k1
 # https://pbs.twimg.com/media/FqJd-irakAEBPh_.jpg
