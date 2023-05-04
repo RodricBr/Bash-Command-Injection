@@ -1,4 +1,4 @@
-# Bash-Command-Injection
+# Using bash to bypass WAF in a Command Injection scenario
 Bash Command Injection WAF Bypass
 
 <img src="cmd-injection.png" align="center">
