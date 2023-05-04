@@ -6,7 +6,7 @@ set -euo pipefail
 # -o pipefail == Prevents errors in a pipeline from being masked.
 #gist.github.com/vncsna/64825d5609c146e80de8b1fd623011ca
 
-echo -e "\n- Conversor\n  \x1b[32mUnicode UCS-4 Little Endian\x1b[0m --> \x1b[33mBytes\x1b[0m --> \x1b[34mBinário\x1b[0m (obase2)\n"
+echo -e "\n- Conversor\n  \x1b[32mUnicode UCS-4 Little Endian\x1b[0m --> \x1b[33mBytes\x1b[0m --> \x1b[34mBinário\x1b[0m (obase2)\n  GH: rodricbr\n"
 
 STRINGS_="$@"
 
