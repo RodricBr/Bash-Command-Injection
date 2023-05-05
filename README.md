@@ -5,7 +5,7 @@ Bash Command Injection WAF Bypass
 
 ### Manual Conversion:
 
-- [UCS-4 Little Endian -> Bytes Radix (octal)](https://onlineunicodetools.com/convert-unicode-to-bytes)
+- [Unicode UCS-4 Little Endian -> Bytes Radix (octal)](https://onlineunicodetools.com/convert-unicode-to-bytes)
 - [Decimal -> Binary](https://www.rapidtables.com/convert/number/decimal-to-binary.html)
 
 <br>
