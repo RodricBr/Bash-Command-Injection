@@ -103,9 +103,9 @@ $'\151\144' # 151 == i; 144 == d (id gets interpreted as a command)
 # https://pbs.twimg.com/media/FqJd-irakAEBPh_.jpg
 
 
-# Bonus without using numbers:
+# Bonus without using numbers (will execute "ls"):
 # ${0##\-}<<<$\'\\$(($((${##}<<${##}))#${##}${#}${#}${##}${##}${#}${##}${#}))\\$(($((${##}<<${##}))#${##}${#}${##}${#}${#}${#}${##}${##}))\'
-                                        ^ 10011010                                                   ^ 10100011
+                                        ^ 10011010 --> Decimal: 154(l)                               ^ 10100011 --> Decimal: 163(s)
 
 ${##} == 1
 ${#}  == 0
