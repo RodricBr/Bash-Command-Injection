@@ -6,7 +6,16 @@ Bash Command Injection WAF Bypass
 ### Manual Conversion:
 
 - [Unicode UTF-8 -> Bytes Radix (octal)](https://onlineunicodetools.com/convert-unicode-to-bytes)
-- [Decimal -> Binary](https://www.rapidtables.com/convert/number/decimal-to-binary.html)
+- [Decimal (previous octal output) -> Binary](https://www.rapidtables.com/convert/number/decimal-to-binary.html)
+
+> Unicode -> Octal:
+>> Starting with a unicode character/string,
+then convert it to its equivalent UTF-8 byte sequence.
+Each byte in that sequence is then represented in octal (base 8) format
+
+> Decimal (previous octal output) -> Binary:
+>> Taking the decimal value that corresponds to the octal representation of a byte from the previous step
+and converting that decimal value to its equivalent binary representation
 
 <br>
 
