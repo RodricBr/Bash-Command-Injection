@@ -5,7 +5,7 @@ Bash Command Injection WAF Bypass
 
 ### Manual Conversion:
 
-- [Unicode UTF-8 -> Bytes Radix (octal)](https://onlineunicodetools.com/convert-unicode-to-bytes)
+- [Unicode UTF-8 -> Octal (Bytes Radix)](https://onlineunicodetools.com/convert-unicode-to-bytes)
 - [Decimal (previous octal output) -> Binary](https://www.rapidtables.com/convert/number/decimal-to-binary.html)
 
 > Unicode -> Octal:
@@ -15,7 +15,7 @@ Each byte in that sequence is then represented in octal (base 8) format
 
 > Decimal (previous octal output) -> Binary:
 >> Taking the decimal value that corresponds to the octal representation of a byte from the previous step
-and converting that decimal value to its equivalent binary representation
+and converting that decimal value to its equivalent binary representation. The binary is our final result.
 
 <br>
 
