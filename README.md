@@ -127,3 +127,73 @@ Step 4: Base-2 Arithmetic      -> $((2#10011010)) = 154
 Step 5: Inside $'...'          -> \$154 becomes \154 (octal escape)
 Step 6: Octal Escape           -> 'l' (executed)
 ```
+
+- Visual Flow:
+```
+'l' -> ASCII 108 -> Octal 154 → Binary 10011010
+                      V
+          $((2#10011010)) = 154
+                      V
+           \$154 inside $'...'
+                      V
+                   'l' (executed)
+```
+
+<br>
+
+5. Why `\\$((...))` Instead of `$((...))`?
+
+| In Script |	After `printf` | Inside `$'...'` | Final Result |
+| --------- | ------------ | ------------- | ------------ |
+| `\\$((...))` | `\$((...))` | `\154` (literal backslash + number) | ✅ Octal escape -> char |
+| `$((...))` | `$((...))` | `154` (just a number) | ❌ Not an escape |
+
+The **double backslash** is critical. It survives `printf` and becomes a single backslash inside `$'...'`, which bash interprets as an octal escape.
+
+<br>
+
+6. Multi-Word / Commands with spaces - Comma Separation
+
+For commands with spaces, the payload uses brace expansion:
+
+```
+${!##-}<<<{\$\'...\',\$\'...\'}
+```
+
+| Part | Purpose |
+| ---- | ------- |
+| `{` | Opens command group |
+| `\$\'...\'` |	First word (`ls`) |
+| `',\$\'` | Comma separator + new `$'...'` block |
+| `...\'` | Second word (`-la`) |
+| `}` |	Closes command group |
+
+Bash treats `{cmd1,cmd2}` as a **brace expansion** - both commands execute sequentially.
+
+<br>
+
+## Full Execution Flow
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│ 1. User runs: ./encode.sh "ls -la"                          │
+│ 2. Script splits: ["ls", "-la"]                             │
+│ 3. Each char -> ASCII → Octal → Binary                      │
+│ 4. Build: ${!##-}<<<{\$\'...\',\$\'...\'}                   │
+│ 5. User pastes output into terminal                         │
+│ 6. Bash evaluates:                                          │
+│    - ${!##-} -> number (ignored)                            │
+│    - <<< feeds here-string                                  │
+│    - $'...' expands octal escapes                           │
+│    - Result: "ls -la" executes                              │
+└─────────────────────────────────────────────────────────────┘
+```
+
+## Character Reference Table
+
+| Character |	ASCII |	Octal |	Binary | Payload Fragment |
+| `l` |	108 |	154 |	10011010 | `\\$(($((1<<1))#10011010))` |
+| `s` |	115 |	163 |	10100011 | `\\$(($((1<<1))#10100011))` |
+| `-` |	45 | 055 | 00101101 |	`\\$(($((1<<1))#00101101))` |
+| `a` |	97 | 141 | 10011001 |	`\\$(($((1<<1))#10011001))` |
+| ` ` | 32 | 040 | 00100000 | `\\$(($((1<<1))#00100000))` |
