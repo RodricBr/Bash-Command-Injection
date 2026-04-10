@@ -1,57 +1,20 @@
-# Using bash to bypass WAF in a Command Injection scenario
-Bash Command Injection WAF Bypass
+## Using bash to bypass WAF in a Command Injection scenario
+This Technique is unique since it avoids using `eval` and `exec`. It also utilizes binary encoding which is hard to detect and uses **Here-string** that is an unusual execution path.
 
-<img src="cmd-injection.png" align="center">
+<p align="left">
+  > <a href="#full-explanation">Explanation</a>
+</p>
 
 ### Manual Conversion:
 
 - [Unicode UTF-8 -> Octal (Bytes Radix)](https://onlineunicodetools.com/convert-unicode-to-bytes)
 - [Decimal (previous octal output) -> Binary](https://www.rapidtables.com/convert/number/decimal-to-binary.html)
 
-> Unicode -> Octal:
->> Starting with a unicode character/string,
-then convert it to its equivalent UTF-8 byte sequence.
-Each byte in that sequence is then represented in octal (base 8) format
-
-> Decimal (previous octal output) -> Binary:
->> Taking the decimal value that corresponds to the octal representation of a byte from the previous step
-and converting that decimal value to its equivalent binary representation. The binary is our final result.
-
-<br>
-
-<hr>
-
-<br>
-
-> `uname -a`: <br>
-```bash
-${!##\-}<<<{\$\'\\$(($((1<<1))#10100101))\\$(($((1<<1))#10011100))\\$(($((1<<1))#10001101))\\$(($((1<<1))#10011011))\\$(($((1<<1))#10010001))\',\$\'\\$(($((1<<1))#110111))\\$(($((1<<1))#10001101))\'}
-```
-> Using a **comma** `,` from **Brace Expansion** so it acts like a **space**. <br>
-> The reason why we use **Brace Expansion**: <br>
-```console
-$ echo {ola,mundo}
-ola mundo
-```
-
-> In short, this is what's happening: ([Click to see full explanation](#full-explanation))
-- `{\$\'command1\',\$\'command2-or-argument2\'}`
-
-<br>
-
-<hr>
-
-<br>
-
 ### Video Example:
 
 [![Link](https://img.youtube.com/vi/B4mpV44Z1-8/0.jpg)](https://www.youtube.com/watch?v=B4mpV44Z1-8)
 
-<br>
-
 <hr>
-
-<br>
 
 ### Full Explanation:
 
@@ -192,8 +155,29 @@ Bash treats `{cmd1,cmd2}` as a **brace expansion** - both commands execute seque
 ## Character Reference Table
 
 | Character |	ASCII |	Octal |	Binary | Payload Fragment |
+| --------- | ----- | ----- | ------ | ---------------- |
 | `l` |	108 |	154 |	10011010 | `\\$(($((1<<1))#10011010))` |
 | `s` |	115 |	163 |	10100011 | `\\$(($((1<<1))#10100011))` |
 | `-` |	45 | 055 | 00101101 |	`\\$(($((1<<1))#00101101))` |
 | `a` |	97 | 141 | 10011001 |	`\\$(($((1<<1))#10011001))` |
 | ` ` | 32 | 040 | 00100000 | `\\$(($((1<<1))#00100000))` |
+
+
+## Reverse Engineering Example:
+
+```bash
+# Binary -> Octal -> ASCII
+$ echo "$((2#10011010))"  # 154
+$ printf '\\%o' 154       # \154
+$ printf '\154'           # l
+```
+
+
+## Security Notes
+
+| Aspect | Details |
+| ------ | ------- |
+| Obfuscation Level |	Medium — bypasses casual inspection and simple pattern matching
+| Detection |	Reversible with understanding of the encoding chain
+| No `eval`/`exec` | Avoids common security filter triggers
+| Pure Bash |	No external dependencies beyond `bc` for encoding
