@@ -7,6 +7,21 @@ This Technique is unique since it avoids using `eval` and `exec`. It also utiliz
   <img border="0" src="./img/example.png" alt="encoding example" title="encoding example">
 </p>
 
+<br>
+<hr>
+<br>
+
+### Encoding Example:
+> Command: `ls`
+```
+${!##-}<<<$\'\\$(($((1<<1))#10011010))\\$(($((1<<1))#10100011))\'
+```
+
+> Command: `uname -a`
+```
+${!##-}<<<{\$\'\\$(($((1<<1))#10100101))\\$(($((1<<1))#10011100))\\$(($((1<<1))#10001101))\\$(($((1<<1))#10011011))\\$(($((1<<1))#10010001))\',\$\'\\$(($((1<<1))#00110111))\\$(($((1<<1))#10001101))\'}
+```
+
 <!--
 ### Video Example:
 
