@@ -1,18 +1,11 @@
-## Using bash to bypass WAF in a Command Injection scenario
-This Technique is unique since it avoids using `eval` and `exec`. It also utilizes binary encoding which is hard to detect and uses **Here-string** that is an unusual execution path.
+## Advanced Command Injection WAF Bypassing using Bash
+This Technique is unique since it avoids using `eval` and `exec`. It also utilizes binary encoding which is hard to detect and uses **Here-string** that is an unusual execution path. See [Full Explanation](#full-explanation) for more information.
 
-<p align="left">
-  > <a href="#full-explanation">Explanation</a>
-</p>
+<br>
 
 <p align="center">
   <img border="0" src="./img/example.png" alt="encoding example" title="encoding example">
 </p>
-
-### Manual Conversion:
-
-- [Unicode UTF-8 -> Octal (Bytes Radix)](https://onlineunicodetools.com/convert-unicode-to-bytes)
-- [Decimal (previous octal output) -> Binary](https://www.rapidtables.com/convert/number/decimal-to-binary.html)
 
 <!--
 ### Video Example:
