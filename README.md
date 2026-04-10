@@ -5,16 +5,25 @@ This Technique is unique since it avoids using `eval` and `exec`. It also utiliz
   > <a href="#full-explanation">Explanation</a>
 </p>
 
+<p align="center">
+  <img border="0" src="example.png" alt="encoding example" title="encoding example">
+</p>
+
 ### Manual Conversion:
 
 - [Unicode UTF-8 -> Octal (Bytes Radix)](https://onlineunicodetools.com/convert-unicode-to-bytes)
 - [Decimal (previous octal output) -> Binary](https://www.rapidtables.com/convert/number/decimal-to-binary.html)
 
+<!--
 ### Video Example:
 
 [![Link](https://img.youtube.com/vi/B4mpV44Z1-8/0.jpg)](https://www.youtube.com/watch?v=B4mpV44Z1-8)
 
+-->
+
+<br>
 <hr>
+<br>
 
 ### Full Explanation:
 
