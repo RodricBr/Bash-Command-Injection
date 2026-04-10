@@ -55,69 +55,75 @@ ola mundo
 
 ### Full Explanation:
 
+## Advanced Bash Command Obfuscation Technique
+
+This technique encodes arbitrary bash commands into an obfuscated one-liner that executes without using eval, exec, or external tools. It leverages bash's parsing rules, ANSI-C quoting, and arithmetic expansion to reconstruct and execute commands at runtime.
+
+
+## Payload Structure
+> Single Word Command (ls)
+`${!##-}<<<$\'\\$(($((1<<1))#10011010))\\$(($((1<<1))#10100011))\'`
+
+> Multi-Word / Commands with spaces (ls -la)
+`${!##-}<<<{\$\'\\$(($((1<<1))#10011010))\\$(($((1<<1))#10100011))\',\$\'\\$(($((1<<1))#00101101))\\$(($((1<<1))#10011010))\\$(($((1<<1))#10011001))\'}`
+
+
+## Component Breakdown
+1. `${!##-}` - Parameter Expansion
+
+| Component |	Meaning |
+| ------------- | ------------- |
+| `${!}`	| Expands to PID of last background job (a number) |
+| `##-`	| Removes leading - if present (e.g., -bash -> bash) |
+| Result |	A numeric value that bash treats as a no-op command name |
+
 ```bash
-### idea: @sirifu4k1
+# Example expansion
+$ echo ${!}
+12345
+$ echo ${!##-}
+12345
+```
 
-# My final payload:
-# ${0##\-}<<<$\'\\$(($((1<<1))#10011010))\\$(($((1<<1))#10100011))\'
-# Let's understand what the hell is happening here.
+<br>
 
-## 1.1: ${0##\-}
-# ${} is a parameter expansion; "$0" == is the first parameter, which is the script itself.
-# Since we're "executing" "$0" straight on the shell, the program that is getting executed is bash
-# But on my shell, bash had a little "-" dash sign next to the "b" letter of bash, so I removed it
-# using parameter expansion (${0##\-} == removes the dash "-" from "-bash", and we're left with "bash")
+2. `<<<` - Here-String Redirection
 
-## 1.2: <<<
-# A "Here String" is used for input redirection from text or a variable.
-# For example: (counting the words of a given file called about.txt)
-$ wc -l <<< about.txt
-1 # (output as an example)
+Feeds the right-hand side as stdin to the command on the left:
+```console
+command <<< "input text"
+```
+In this technique, the numeric result of `${!##-}` isn't a real command, but bash still processes the here-string, causing the `$'...'` content to be evaluated.
 
-## 1.3: $\' ... \'
-# First of all, "$'Something\nSomething-else'" causes escape sequences to be interpreted.
-# So we can call a UTF-8 octal to be interpreted to text, just like so (154 in octal == l; 163 in octal == s):
-$'\154\163'
+<br>
 
-# Another example:
-$'\151\144' # 151 == i; 144 == d (id gets interpreted as a command)
+3. `$'...'` - ANSI-C Quoting
 
-## 1.4: \\$(( $(( 1 << 1 ))#10011010)) \\$(( $(( 1 << 1))#10100011 ))
-# $(()) == POSIX arithmetic expansion
-# Note: (man bash)
-# Words of the form $'string' are treated specially. The word expands to
-# string, with backslash-escaped characters replaced as specified by the ANSI C
-# standard.
+Enables escape sequence interpretation inside the string:
+| Escape | Becomes |
+| ------ | ------- |
+| `\154` | Octal 154 -> ASCII `l` |
+| `\163` | Octal 163 -> ASCII `s` |
+| `\n` | Newline |
+| `\t` | Tab |
 
-# Note:
-# The "\\" (double backslash) characters are necessary in order to force the shell to pass
-# a "\$" (single backslash, dollar sign) to the arithmetic expansion.
+```bash
+$ $'\154\163'
+ls  # Bash attempts to execute "ls"
+```
 
-### 2.4: $(( $((1<<1))#10011010 ))
-# 1<<1 == 2
-# base#number == performing calculations between different arithmetic bases [base#]number
-#                base is a decimal integer between 2 and 36 that specifies the arithmetic base. (default is base 10)
+<br>
 
-# Enclosing two arithmetic expansion inside of each other, so that 2#10011010 (octal "154" to binary is "10011010") is equal to 154
-# 167 150 157 :: 10100111 = w; 10010110 = h; 10011101 = o
+4. `\\$(($((1<<1))#BINARY))` - The Encoding Engine
 
-### 3.4: $(( $((1<<1))#10100011 ))
-# Is exatcly the same concept as I mentioned previously (at 2.4), and we're left with 163 (octal)
+This is the core obfuscation layer. Here's how a single character is encoded:
 
-# Conclusion:
-# This whole mess will give us the result $'\154\163', which is "ls"
-# or echo -e "\0154\163" to print it as a string
-
-# Image explanation, by @sirifu4k1
-# https://pbs.twimg.com/media/FqJd-irakAEBPh_.jpg
-
-
-# Bonus without using numbers (will execute "ls"):
-# ${0##\-}<<<$\'\\$(($((${##}<<${##}))#${##}${#}${#}${##}${##}${#}${##}${#}))\\$(($((${##}<<${##}))#${##}${#}${##}${#}${#}${#}${##}${##}))\'
-                                        ^ 10011010 --> Decimal: 154(l)                               ^ 10100011 --> Decimal: 163(s)
-
-${##} == 1
-${#}  == 0
-
-echo -ne "${##}${#}${#}${##}${##}${#}${##}${#} ${##}${#}${##}${#}${#}${#}${##}${##}\n"
+- Encoding Chain for `l`:
+```
+Step 1: ASCII 'l'              -> 108 (decimal)
+Step 2: Decimal to Octal       -> 154
+Step 3: Octal to Binary        -> 10011010
+Step 4: Base-2 Arithmetic      -> $((2#10011010)) = 154
+Step 5: Inside $'...'          -> \$154 becomes \154 (octal escape)
+Step 6: Octal Escape           -> 'l' (executed)
 ```
