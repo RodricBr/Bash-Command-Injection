@@ -6,7 +6,7 @@ This Technique is unique since it avoids using `eval` and `exec`. It also utiliz
 </p>
 
 <p align="center">
-  <img border="0" src="example.png" alt="encoding example" title="encoding example">
+  <img border="0" src="./img/example.png" alt="encoding example" title="encoding example">
 </p>
 
 ### Manual Conversion:
