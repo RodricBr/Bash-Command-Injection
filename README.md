@@ -19,13 +19,13 @@ This Technique is unique since it avoids using `eval` and `exec`. It also utiliz
 ${0##\-}<<<$\'\\$(($((1<<1))#10011010))\\$(($((1<<1))#10100011))\'
 ```
 
-### Double Encoding (--double-encode, -de):
+### Double Encoding (--double-encode, -e):
 > Command: `ls`
 ```console
 ${!##-}<<<$\'\\$(($((${##}<<${##}))#${##}${#}${#}${##}${##}${#}${##}${#}))\\$(($((${##}<<${##}))#${##}${#}${##}${#}${#}${#}${##}${##}))\'
 ```
 
-### Url Safe Encoding:
+### Url Safe Encoding (--url-safe, -u):
 > Command: `ls`
 ```console
 ${0%23%23\\-}<<<$\'\\$(($((1<<1))%2310011010))\\$(($((1<<1))%2310100011))\'
