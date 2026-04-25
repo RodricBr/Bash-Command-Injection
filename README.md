@@ -1,5 +1,8 @@
 ## Advanced Command Injection WAF Bypassing using Bash
-This Technique is unique since it avoids using `eval` and `exec`. It also utilizes binary encoding which is hard to detect and uses **Here-string** that is an unusual execution path. See [Full Explanation](#full-explanation) for more information.
+This technique performs command obfuscation without relying on `eval` or `exec` by chaining Bash features: binary literals are interpreted via arithmetic expansion `$((2#binaryValue))` to produce decimal values that correspond to octal digits. <br>
+These digits are then reinterpreted as octal escape sequences within ANSI-C quoted strings `$'...'`, reconstructing the original command. The payload is delivered through a here-string `<<<`, causing the decoded string to be consumed as input by a command interpreter (e.g., bash), forming a non-obvious execution path.
+
+-> See [Full Explanation](#full-explanation) for more in-depth information.
 
 <br>
 
@@ -93,12 +96,12 @@ In this technique, the numeric result of `${!##-}` isn't a real command, but bas
 3. `$'...'` - ANSI-C Quoting
 
 Enables escape sequence interpretation inside the string:
-| Escape | Becomes |
-| ------ | ------- |
-| `\154` | Octal 154 -> ASCII `l` |
-| `\163` | Octal 163 -> ASCII `s` |
-| `\n` | Newline |
-| `\t` | Tab |
+| Escape | Interpretation         |
+|--------|------------------------|
+| \154   | 154₈ -> 108₁₀ -> "l"     |
+| \163   | 163₈ -> 115₁₀ -> "s"     |
+| \n     | newline                |
+| \t     | tab                    |
 
 ```bash
 $ $'\154\163'
@@ -113,23 +116,27 @@ This is the core obfuscation layer. Here's how a single character is encoded:
 
 - Encoding Chain for `l`:
 ```
-Step 1: ASCII 'l'              -> 108 (decimal)
-Step 2: Decimal to Octal       -> 154
-Step 3: Octal to Binary        -> 10011010
-Step 4: Base-2 Arithmetic      -> $((2#10011010)) = 154
-Step 5: Inside $'...'          -> \$154 becomes \154 (octal escape)
-Step 6: Octal Escape           -> 'l' (executed)
+1. Character -> ASCII (decimal)
+   "l" -> 108
+2. Same value, different representations
+   108 (decimal) = 154 (octal) = 10011010 (binary)
+3. Bash interprets binary -> decimal
+   $((2#10011010)) -> 154   <- this is decimal
+4. Turn number into an octal escape string
+   "154" -> "\154"   (inside $'...')
+5. Bash interprets octal escape -> character
+   \154 (octal) -> 108 (decimal) -> "l"
+
+10011010₂ -> 154₁₀ -> "\154" -> 154₈ -> 108₁₀ -> "l"
 ```
 
 - Visual Flow:
 ```
-'l' -> ASCII 108 -> Octal 154 → Binary 10011010
-                      V
-          $((2#10011010)) = 154
-                      V
-           \$154 inside $'...'
-                      V
-                   'l' (executed)
+"l" -> 108₁₀ ≡ 154₈ ≡ 10011010₂
+                V
+      $((2#10011010)) -> 154₁₀
+                V
+          "\154" -> 154₈ -> 108₁₀ -> "l"
 ```
 
 <br>
@@ -168,29 +175,36 @@ Bash treats `{cmd1,cmd2}` as a **brace expansion** - both commands execute seque
 ## Full Execution Flow
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│ 1. User runs: ./encode.sh "ls -la"                          │
-│ 2. Script splits: ["ls", "-la"]                             │
-│ 3. Each char -> ASCII → Octal → Binary                      │
-│ 4. Build: ${!##-}<<<{\$\'...\',\$\'...\'}                   │
-│ 5. User pastes output into terminal                         │
-│ 6. Bash evaluates:                                          │
-│    - ${!##-} -> number (ignored)                            │
-│    - <<< feeds here-string                                  │
-│    - $'...' expands octal escapes                           │
-│    - Result: "ls -la" executes                              │
-└─────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────┐
+│ 1. User runs: ./encode.sh "ls -la"                              │
+│ 2. Script processes each character:                             │
+│    char -> ASCII -> octal -> binary (for obfuscation)           │
+│ 3. Script builds payload using:                                 │
+│    - $'...' (ANSI-C quoting for octal escapes)                  │
+│    - brace expansion (maybe multiple chunks)                    │
+│    - <<< feeds string as input (here-string)                    │
+│ 4. User pastes payload into terminal                            │
+│ 5. Bash evaluation order:                                       │
+│    a) Brace expansion (if present)                              │
+│    b) Parameter expansion (${...})                              │
+│    c) ANSI-C quoting: $'...' -> interprets \NNN (octal)         │
+│    d) Word splitting                                            │
+│    e) Here-string (<<<) feeds final string to command           │
+│ 6. Resulting decoded string:                                    │
+│    "ls -la"                                                     │
+│ 7. That string is executed on the shell (depending on context)  │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
 ## Character Reference Table
 
-| Character |	ASCII |	Octal |	Binary | Payload Fragment |
-| --------- | ----- | ----- | ------ | ---------------- |
-| `l` |	108 |	154 |	10011010 | `\\$(($((1<<1))#10011010))` |
-| `s` |	115 |	163 |	10100011 | `\\$(($((1<<1))#10100011))` |
-| `-` |	45 | 055 | 00101101 |	`\\$(($((1<<1))#00101101))` |
-| `a` |	97 | 141 | 10011001 |	`\\$(($((1<<1))#10011001))` |
-| ` ` | 32 | 040 | 00100000 | `\\$(($((1<<1))#00100000))` |
+| Character |	ASCII₁₀ |	Octal₈ | Real Binary₂ | Payload Binary₂ | Payload Fragment |
+| --------- | ----- | ----- | ----- | ------ | ---------------- |
+| `l` |	108 |	154 |	01101100 | 10011010 | `$((2#10011010))` |
+| `s` |	115 |	163 |	01110011 | 10100011 | `$((2#10100011))` |
+| `-` |	45 | 055 | 00101101| 00101101 |	`$((2#00101101))` |
+| `a` |	97 | 141 | 01100001 | 10001101 |	`$((2#10011001))` |
+| ` ` | 32 | 040 | 00100000 | 00101000 | `$((2#00100000))` |
 
 
 ## Reverse Engineering Example:
