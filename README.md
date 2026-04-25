@@ -1,6 +1,7 @@
 ## Advanced Command Injection WAF Bypassing using Bash
 This technique performs command obfuscation without relying on `eval` or `exec` by chaining Bash features: binary literals are interpreted via arithmetic expansion `$((2#binaryValue))` to produce decimal values that correspond to octal digits. <br>
-These digits are then reinterpreted as octal escape sequences within ANSI-C quoted strings `$'...'`, reconstructing the original command. The payload is delivered through a here-string `<<<`, causing the decoded string to be consumed as input by a command interpreter (e.g., bash), forming a non-obvious execution path.
+These digits are then reinterpreted as octal escape sequences within ANSI-C quoted strings `$'...'`, reconstructing the original command. The payload is delivered through a here-string `<<<`, causing the decoded string to be consumed as input by a command interpreter (e.g., bash), forming a non-obvious execution path. <br>
+This article focuses on conceptual analysis of multi-base obfuscation in Bash and is not essentially intended for practical deployment, but still could be used in CTF scenarios.
 
 -> See [Full Explanation](#full-explanation) for more in-depth information.
 
